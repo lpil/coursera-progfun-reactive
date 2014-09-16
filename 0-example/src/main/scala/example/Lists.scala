@@ -1,6 +1,7 @@
 package example
 
 import common._
+import scala.annotation.tailrec
 
 object Lists {
   /**
@@ -24,11 +25,12 @@ object Lists {
    * @return The sum of all elements in `xs`
    */
   def sum(xs: List[Int]): Int = {
-    def sumLoop(acc: Int, xs: List[Int]): Int =
+    @tailrec def sumLoop(acc: Int, xs: List[Int]): Int = {
       xs.length match {
         case 0 => acc
         case _ => sumLoop(acc + xs.head, xs.tail)
       }
+    }
     sumLoop(0, xs)
   }
 
@@ -46,10 +48,15 @@ object Lists {
    * @throws java.util.NoSuchElementException if `xs` is an empty list
    */
   def max(xs: List[Int]): Int = {
-    def maxLoop(biggest: Int, xs: List[Int]): Int = {
-      xs.length match {
-        case 0 => biggest
-        case _ => if(biggest > xs.head) biggest else xs.head
+    @tailrec def maxLoop(curMax: Int, xs: List[Int]): Int = {
+      val newMax = xs.length match {
+        case 0 => curMax
+        case _ => if(curMax > xs.head) curMax else xs.head
+      }
+      if(xs.isEmpty) {
+        newMax
+      } else {
+        maxLoop(newMax, xs.tail)
       }
     }
 

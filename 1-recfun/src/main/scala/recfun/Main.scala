@@ -1,5 +1,6 @@
 package recfun
 import common._
+import scala.annotation.tailrec
 
 object Main {
   def main(args: Array[String]) {
@@ -26,7 +27,7 @@ object Main {
    * Exercise 2
    */
   def balance(chars: List[Char]): Boolean = {
-    def balanceLoop(chars: List[Char], unmatched: Int): Boolean = {
+    @tailrec def balanceLoop(chars: List[Char], unmatched: Int): Boolean = {
       if(chars.isEmpty) {
         unmatched == 0
       } else {

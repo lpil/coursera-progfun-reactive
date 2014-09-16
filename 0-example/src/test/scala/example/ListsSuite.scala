@@ -145,6 +145,10 @@ class ListsSuite extends FunSuite {
     assert(max(List(3, 7, 2)) === 7)
   }
 
+  test("max of a few numbers with max last") {
+    assert(max(List(3,7,2,2,3,4,5,6,10)) === 10)
+  }
+
   test("max of one number") {
     assert(max(List(3)) === 3)
   }
