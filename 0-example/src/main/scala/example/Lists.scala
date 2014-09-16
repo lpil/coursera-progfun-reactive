@@ -53,11 +53,8 @@ object Lists {
         case 0 => curMax
         case _ => if(curMax > xs.head) curMax else xs.head
       }
-      if(xs.isEmpty) {
-        newMax
-      } else {
-        maxLoop(newMax, xs.tail)
-      }
+      if (xs.isEmpty) newMax
+      else maxLoop(newMax, xs.tail)
     }
 
     xs.length match {

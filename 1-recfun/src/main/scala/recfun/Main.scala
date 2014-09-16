@@ -28,9 +28,8 @@ object Main {
    */
   def balance(chars: List[Char]): Boolean = {
     @tailrec def balanceLoop(chars: List[Char], unmatched: Int): Boolean = {
-      if(chars.isEmpty) {
-        unmatched == 0
-      } else {
+      if (chars.isEmpty) unmatched == 0
+      else {
         val newUnmatched = chars.head match {
           case '(' => unmatched + 1
           case ')' => unmatched - 1
