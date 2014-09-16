@@ -25,7 +25,22 @@ object Main {
   /**
    * Exercise 2
    */
-  def balance(chars: List[Char]): Boolean = ???
+  def balance(chars: List[Char]): Boolean = {
+    def balanceLoop(chars: List[Char], unmatched: Int): Boolean = {
+      if(chars.isEmpty) {
+        unmatched == 0
+      } else {
+        val newUnmatched = chars.head match {
+          case '(' => unmatched + 1
+          case ')' => unmatched - 1
+          case  _  => unmatched
+        }
+        balanceLoop(chars.tail, newUnmatched.abs)
+      }
+    }
+
+    balanceLoop(chars, 0)
+  }
 
   /**
    * Exercise 3
