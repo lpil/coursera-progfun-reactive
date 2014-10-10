@@ -105,7 +105,7 @@ object Huffman {
     * Checks whether the list `trees` contains only one single code tree.
     */
   def singleton(trees: List[CodeTree]): Boolean =
-    trees.size == 0
+    trees.size == 1
 
   /**
     * The parameter `trees` of this function is a list of code trees ordered
@@ -120,8 +120,11 @@ object Huffman {
     * returned unchanged.
     */
   def combine(trees: List[CodeTree]): List[CodeTree] = {
-    (makeCodeTree(trees(0), trees(1)) :: trees.drop(2))
-      .sortBy(e => weight(e))
+    if (trees.size < 2)
+      trees
+    else
+      (makeCodeTree(trees(0), trees(1)) :: trees.drop(2))
+        .sortBy(e => weight(e))
   }
 
 
@@ -171,12 +174,12 @@ object Huffman {
   type Bit = Int
 
   /**
-    * This function decodes the bit sequence `bits` using the code tree `tree` and returns
-    * the resulting list of characters.
+    * This function decodes the bit sequence `bits` using the code tree `tree`
+    * and returns the resulting list of characters.
     */
   def decode(tree: CodeTree, bits: List[Bit]): List[Char] = {
-    def loop(tree: CodeTree, subtree: CodeTree, bits: List[Bit], acc: List[Char]
-    ): List[Char] = {
+    def loop(tree: CodeTree, subtree: CodeTree, bits: List[Bit],
+      acc: List[Char]): List[Char] = {
       subtree match {
         case Leaf(char, _) => {
           bits match {
@@ -185,8 +188,11 @@ object Huffman {
           }
         }
         case Fork(l, r, _,_) => {
-          val nextTree = if (bits(0) == 0) l else r
-          loop(tree, nextTree, bits.drop(1), acc)
+          bits match {
+            case 0 :: tail => loop(tree, l, bits.drop(1), acc)
+            case 1 :: tail => loop(tree, r, bits.drop(1), acc)
+            case _ => acc
+          }
         }
       }
     }
@@ -226,7 +232,8 @@ object Huffman {
       case Leaf(leafChar,_) => if (char == leafChar) acc else Nil
       case Fork(l, r, chars,_) => {
         if (chars.contains(char))
-          encodeChar(l, char, 0 :: acc) ::: encodeChar(r, char, 1 :: acc)
+          encodeChar(l, char, acc ::: List(0)) :::
+          encodeChar(r, char, acc ::: List(1))
         else Nil
       }
     }
@@ -267,7 +274,10 @@ object Huffman {
       tree match {
         case Leaf(char,_) => (char, bitAcc) :: tableAcc
         case Fork(l, r, chars,_) =>
-          loop(l, 0 :: bitAcc, tableAcc) ::: loop(r, 1 :: bitAcc, tableAcc)
+          mergeCodeTables(
+            loop(l, bitAcc ::: List(0), tableAcc),
+            loop(r, bitAcc ::: List(1), tableAcc)
+          )
       }
     loop(tree, Nil, Nil)
   }

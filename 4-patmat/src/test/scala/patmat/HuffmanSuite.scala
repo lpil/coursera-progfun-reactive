@@ -30,6 +30,39 @@ class HuffmanSuite extends FunSuite {
     }
   }
 
+  // Singleton
+  test("Singleton of Nil") {
+    assert(!singleton(Nil))
+  }
+
+  test("Singleton of one leaf") {
+    assert(singleton(List( Leaf('a',2) )))
+  }
+
+  test("Singleton of one fork") {
+    new TestTrees {
+      assert(singleton(List( t1 )))
+    }
+  }
+
+  test("Singleton of two") {
+    new TestTrees {
+      assert(!singleton(List(t1, t2)))
+    }
+  }
+
+  // Combine
+  test("Combine of singleton") {
+    new TestTrees {
+      assert(combine(List(t1)) === List(t1))
+    }
+  }
+
+  test("Combine of Nil") {
+    assert(combine(Nil) === Nil)
+  }
+
+  // Times
   test("times 0") {
     assert(times(Nil) === Nil)
   }
@@ -60,12 +93,115 @@ class HuffmanSuite extends FunSuite {
            List(Fork(Leaf('e',1),Leaf('t',2),List('e', 't'),3), Leaf('x',4)))
   }
 
+  // Decode
+
+  // t1 = Fork(Leaf('a',2),
+  //           Leaf('b',3))
+  test("decode t1 - ab") {
+    new TestTrees {
+      assert(decode(t1, List(0,1)) === "ab".toList)
+    }
+  }
+  test("decode t1 - aaab") {
+    new TestTrees {
+      assert(decode(t1, List(0,0,0,1)) === "aaab".toList)
+    }
+  }
+  test("decode t1 - aaababaa") {
+    new TestTrees {
+      assert(decode(t1, List(0,0,0,1,0,1,0,0)) === "aaababaa".toList)
+    }
+  }
+
+  // t2 = Fork(Fork(Leaf('a',2), Leaf('b',3)),
+  //           Leaf('d',4))
+  test("decode t2 - ab") {
+    new TestTrees {
+      assert(decode(t2, List(0,0,0,1)) === "ab".toList)
+    }
+  }
+  test("decode t2 - abddb") {
+    new TestTrees {
+      assert(decode(t2, List(0,0,0,1,1,1,0,1)) === "abddb".toList)
+    }
+  }
+  test("decode t2 - ddda") {
+    new TestTrees {
+      assert(decode(t2, List(1,1,1,0,0)) === "ddda".toList)
+    }
+  }
+
+  // Encode
+  test("encode t1 - a") {
+    new TestTrees {
+      assert(encode(t1)(List('a')) === List(0))
+    }
+  }
+  test("encode t1 - b") {
+    new TestTrees {
+      assert(encode(t1)(List('b')) === List(1))
+    }
+  }
+  test("encode t1 - ab") {
+    new TestTrees {
+      assert(encode(t1)("ab".toList) === List(0,1))
+    }
+  }
+  test("encode t1 - abaaba") {
+    new TestTrees {
+      assert(encode(t1)("abaaba".toList) === List(0,1,0,0,1,0))
+    }
+  }
+
+  // t2 = Fork(Fork(Leaf('a',2), Leaf('b',3)),
+  //           Leaf('d',4))
+  test("encode t2 - a") {
+    new TestTrees {
+      assert(encode(t2)(List('a')) === List(0,0))
+    }
+  }
+  test("encode t2 - b") {
+    new TestTrees {
+      assert(encode(t2)(List('b')) === List(0,1))
+    }
+  }
+  test("encode t2 - d") {
+    new TestTrees {
+      assert(encode(t2)(List('d')) === List(1))
+    }
+  }
+  test("encode t2 - dad") {
+    new TestTrees {
+      assert(encode(t2)("dad".toList) === List(1,0,0,1))
+    }
+  }
+  test("encode t2 - bad") {
+    new TestTrees {
+      assert(encode(t2)("bad".toList) === List(0,1,0,0,1))
+    }
+  }
+  test("encode t2 - baddad") {
+    new TestTrees {
+      assert(encode(t2)("baddad".toList) === List(0,1,0,0,1,1,0,0,1))
+    }
+  }
+
+  // Encode decode
   test("decode and encode a very short text should be identity") {
     new TestTrees {
       assert(decode(t1, encode(t1)("ab".toList)) === "ab".toList)
     }
   }
 
+  test("decode and encode a text with frenchCode should be identity") {
+    new TestTrees {
+      assert(
+        decode(frenchCode, encode(frenchCode)("louis".toList)) 
+        === "louis".toList)
+    }
+  }
+
+  // Quick encode decode
   test("decode and quick encode a very short text should be identity") {
     new TestTrees {
       assert(decode(t1, quickEncode(t1)("ab".toList)) === "ab".toList)
