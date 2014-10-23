@@ -143,7 +143,7 @@ class AnagramsSuite extends FunSuite {
   //
   // subtract
   //
-  ignore("subtract: lard - r") {
+  test("subtract: lard - r") {
     val lard = List(('a', 1), ('d', 1), ('l', 1), ('r', 1))
     val r = List(('r', 1))
     val lad = List(('a', 1), ('d', 1), ('l', 1))
@@ -151,18 +151,37 @@ class AnagramsSuite extends FunSuite {
       subtract(lard, r) ===
       lad)
   }
+  test("subtract: larrd - r") {
+    val larrd = List(('a', 1), ('d', 1), ('l', 1), ('r', 2))
+    val r = List(('r', 1))
+    val lard = List(('a', 1), ('d', 1), ('l', 1), ('r', 1))
+    assert(
+      subtract(larrd, r) ===
+      lard)
+  }
+  test("subtract: larrd - larrd") {
+    val larrd = List(('a', 1), ('d', 1), ('l', 1), ('r', 2))
+    assert(
+      subtract(larrd, larrd) ===
+      Nil)
+  }
+  test("subtract: louis - lou") {
+    val louis = List(('i', 1), ('l', 1), ('o', 1), ('s', 1), ('u', 1))
+    val lou   = List(('l', 1), ('o', 1), ('u', 1))
+    val    is = List(('i', 1), ('s', 1))
+    assert(
+      subtract(louis, lou) ===
+      is)
+  }
 
-
-
-
-
-
-  ignore("sentence anagrams: []") {
+  //
+  // sentenceAnagrams
+  //
+  test("sentence anagrams: []") {
     val sentence = List()
     assert(sentenceAnagrams(sentence) === List(Nil))
   }
-
-  ignore("sentence anagrams: Linux rulez") {
+  test("sentence anagrams: Linux rulez") {
     val sentence = List("Linux", "rulez")
     val anas = List(
       List("Rex", "Lin", "Zulu"),
