@@ -56,10 +56,47 @@ class BloxorzSuite extends FunSuite {
     }
   }
 
+  //
+  // findChar
+  //
   test("findChar level 1") {
     new Level1 {
       assert(startPos == Pos(1,1))
       assert(goal == Pos(4,7))
+    }
+  }
+
+  //
+  // Block isStanding
+  //
+  test("block isStanding") {
+    new Level1 {
+      assert(Block(Pos(0,0),Pos(0,0)).isStanding)
+      assert(Block(Pos(10,10),Pos(10,10)).isStanding)
+      assert(!Block(Pos(20,11),Pos(30,11)).isStanding)
+      assert(!Block(Pos(0,0),Pos(0,1)).isStanding)
+    }
+  }
+
+  //
+  // Block isLegal
+  //
+  test("block isLegal") {
+    new Level1 {
+      assert(Block(Pos(0,0),Pos(0,0)).isLegal, "0,0 0,0")
+      assert(Block(Pos(0,0),Pos(1,0)).isLegal, "0,0 1,0")
+      assert(Block(Pos(3,1),Pos(3,2)).isLegal, "3,1 3,2")
+      assert(!Block(Pos(3,0),Pos(3,1)).isLegal, "3,0 3,1")
+      assert(!Block(Pos(5,0),Pos(5,0)).isLegal, "5,0 5,0")
+    }
+  }
+
+  //
+  // Block startBlock
+  //
+  test("block startBlock") {
+    new Level1 {
+      assert(startBlock === Block(Pos(1,1), Pos(1,1)))
     }
   }
 
