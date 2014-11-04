@@ -27,7 +27,8 @@ class BloxorzSuite extends FunSuite {
   }
 
   trait Level1 extends SolutionChecker {
-      /* terrain for level 1*/
+    /* terrain for level 1*/
+    val b2 = Block(Pos(2,2), Pos(2,2))
 
     val level =
     """ooo-------
@@ -53,6 +54,8 @@ class BloxorzSuite extends FunSuite {
       assert(!terrain(Pos(4,4)), "4,4 -")
       assert(!terrain(Pos(4,11)), "4,11 out of bounds")
       assert(!terrain(Pos(10,1)), "10,1 out of bounds")
+      assert(!terrain(Pos(-3,1)), "-3,1 out of bounds")
+      assert(!terrain(Pos(0,-1)), "0,-1 out of bounds")
     }
   }
 
@@ -97,6 +100,35 @@ class BloxorzSuite extends FunSuite {
   test("block startBlock") {
     new Level1 {
       assert(startBlock === Block(Pos(1,1), Pos(1,1)))
+    }
+  }
+
+  // Block neighbors
+  test("Block neighbors") {
+    new Level1 {
+      assert(b2.neighbors === List(
+        (Block( Pos(2,0),Pos(2,1) ), Left),
+        (Block( Pos(2,3),Pos(2,4) ), Right),
+        (Block( Pos(0,2),Pos(1,2) ), Up),
+        (Block( Pos(3,2),Pos(4,2) ), Down)
+      ))
+    }
+  }
+
+  // Block legalNeighbors
+  test("Block legalNeighbors") {
+    new Level1 {
+      assert(Block(Pos(0,0),Pos(0,0)).legalNeighbors === List(
+        (Block( Pos(0,1),Pos(0,2) ), Right),
+        (Block( Pos(1,0),Pos(2,0) ), Down)
+      ))
+
+      assert(b2.neighbors === List(
+        (Block( Pos(2,0),Pos(2,1) ), Left),
+        (Block( Pos(2,3),Pos(2,4) ), Right),
+        (Block( Pos(0,2),Pos(1,2) ), Up),
+        (Block( Pos(3,2),Pos(4,2) ), Down)
+      ))
     }
   }
 
