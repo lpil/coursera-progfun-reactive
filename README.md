@@ -1,3 +1,1 @@
-# Coursera progfun
-
-https://www.coursera.org/course/progfun
+Functional Programming is neato. Scala is ok.
